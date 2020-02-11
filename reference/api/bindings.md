@@ -7,7 +7,7 @@ Examples for bindings include ```Kafka```, ```Rabbit MQ```, ```Azure Event Hubs`
 
 An Dapr Binding has the following structure:
 
-```
+```yml
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
@@ -21,7 +21,9 @@ spec:
 
 The ```metadata.name``` is the name of the binding. A developer who wants to trigger her app using an input binding can listen on a ```POST``` http endpoint with the route name being the same as ```metadata.name```.
 
-the ```metadata``` section is an open key/value metadata pair that allows a binding to define connection properties, as well as custom properties unique to the implementation.
+On startup Dapr sends a ```OPTIONS``` request to the ```metadata.name``` endpoint and expects a different status code as ```NOT FOUND (404)``` if this application wants to subscribe to the binding.
+
+The ```metadata``` section is an open key/value metadata pair that allows a binding to define connection properties, as well as custom properties unique to the implementation.
 
 For example, here's how a Python application subscribes for events from ```Kafka``` using an Dapr API compliant platform:
 
@@ -64,7 +66,9 @@ This endpoint lets you invoke an Dapr output binding.
 
 ### HTTP Request
 
-`POST/GET/PUT/DELETE http://localhost:3500/v1.0/bindings/<name>`
+```http
+POST/GET/PUT/DELETE http://localhost:<daprPort>/v1.0/bindings/<name>
+```
 
 ### HTTP Response codes
 
@@ -77,7 +81,7 @@ Code | Description
 
 The bindings endpoint receives the following JSON payload:
 
-```
+```json
 {
   "data": "",
   "metadata": [
@@ -93,12 +97,13 @@ The metadata is an array of key/value pairs and allows to set binding specific m
 
 Parameter | Description
 --------- | -----------
+daprPort | the Dapr port
 name | the name of the binding to invoke
 
 ```shell
 curl -X POST http://localhost:3500/v1.0/bindings/myKafka \
-	-H "Content-Type: application/json" \
-	-d '{
+  -H "Content-Type: application/json" \
+  -d '{
         "data": {
           "message": "Hi"
         },

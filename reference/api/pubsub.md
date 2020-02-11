@@ -7,7 +7,10 @@ Dapr guarantees at least once semantics for this endpoint.
 
 ### HTTP Request
 
-```POST http://localhost:3500/v1.0/publish/<topic>```
+```http
+POST http://localhost:<daprPort>/v1.0/publish/<topic>
+```
+
 ### HTTP Response codes
 
 Code | Description
@@ -15,12 +18,19 @@ Code | Description
 200  | Message delivered
 500  | Delivery failed
 
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+daprPort | the Dapr port
+topic | the name of the topic
+
 ```shell
 curl -X POST http://localhost:3500/v1.0/publish/deathStarStatus \
-	-H "Content-Type: application/json" \
-	-d '{
-       	     "status": "completed"
-      	 }'
+  -H "Content-Type: application/json" \
+ -d '{
+       "status": "completed"
+     }'
 ```
 
 ## Broadcast a message to a list of recipients
@@ -30,7 +40,9 @@ The list of recipients may include the unique identifiers of other apps (used by
 
 ### HTTP Request
 
-```POST http://localhost:3500/v1.0/publish/<topic>```
+```http
+POST http://localhost:<daprPort>/v1.0/publish/<topic>
+```
 
 ### HTTP Response codes
 
@@ -39,12 +51,19 @@ Code | Description
 200  | Message delivered
 500  | Delivery failed
 
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+daprPort | the Dapr port
+topic | the name of the topic
+
 > Example of publishing a message to another Dapr app:
 
 ```shell
 curl -X POST http://localhost:3500/v1.0/publish \
-	-H "Content-Type: application/json" \
-	-d '{
+  -H "Content-Type: application/json" \
+  -d '{
         "topic": "DeathStarStatus",
         "data": {
           "status": "completed"
@@ -59,8 +78,8 @@ curl -X POST http://localhost:3500/v1.0/publish \
 
 ```shell
 curl -X POST http://localhost:3500/v1.0/publish \
-	-H "Content-Type: application/json" \
-	-d '{
+  -H "Content-Type: application/json" \
+  -d '{
         "topic": "DeathStarStatus",
         "data": {
           "status": "completed"
@@ -75,8 +94,8 @@ curl -X POST http://localhost:3500/v1.0/publish \
 
 ```shell
 curl -X POST http://localhost:3500/v1.0/publish \
-	-H "Content-Type: application/json" \
-	-d '{
+  -H "Content-Type: application/json" \
+  -d '{
         "eventName": "DeathStarStatus",
         "data": {
           "status": "completed"
@@ -95,7 +114,15 @@ In order to receive topic subscriptions, Dapr will invoke the following endpoint
 
 ### HTTP Request
 
-```GET http://<address>/dapr/subscribe```
+```http
+GET http://localhost:<appPort>/dapr/subscribe
+```
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+appPort | the application port
 
 ### HTTP Response body
 
@@ -103,9 +130,9 @@ A json encoded array of strings.
 
 Example:
 
-`
+```json
 "["TopicA","TopicB"]"
-`
+```
 
 ## Delivering events to subscribers
 
@@ -115,7 +142,15 @@ The following example illustrates this point, considering a subscription for top
 
 ### HTTP Request
 
-```POST http://<address>/TopicA```
+```http
+POST http://localhost:<appPort>/TopicA
+```
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+appPort | the application port
 
 ### HTTP Response body
 

@@ -46,7 +46,7 @@ This tells Dapr to communicate with your app via gRPC over port `5005`.
 
 When running in standalone mode, use the `--protocol` flag to tell Dapr to use gRPC to talk to the app:
 
-```
+```bash
 dapr run --protocol grpc --app-port 5005 node app.js
 ```
 
@@ -67,32 +67,32 @@ import (
 2. Create the client
 
 ```go
-    // Get the Dapr port and create a connection
-	daprPort := os.Getenv("DAPR_GRPC_PORT")
-	daprAddress := fmt.Sprintf("localhost:%s", daprPort)
-	conn, err := grpc.Dial(daprAddress, grpc.WithInsecure())
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer conn.Close()
+  // Get the Dapr port and create a connection
+  daprPort := os.Getenv("DAPR_GRPC_PORT")
+  daprAddress := fmt.Sprintf("localhost:%s", daprPort)
+  conn, err := grpc.Dial(daprAddress, grpc.WithInsecure())
+  if err != nil {
+    fmt.Println(err)
+  }
+  defer conn.Close()
 
-	// Create the client
-	client := pb.NewDaprClient(conn)
+  // Create the client
+  client := pb.NewDaprClient(conn)
 ```
 
 3. Invoke the Save State method
 
 ```go
 _, err = client.SaveState(context.Background(), &pb.SaveStateEnvelope{
-		Requests: []*pb.StateRequest{
-			&pb.StateRequest{
-				Key: "myKey",
-				Value: &any.Any{
-					Value: []byte("My State"),
-				},
-			},
-		},
-	})
+    Requests: []*pb.StateRequest{
+      &pb.StateRequest{
+        Key: "myKey",
+        Value: &any.Any{
+          Value: []byte("My State"),
+        },
+      },
+    },
+  })
 ```
 
 Hooray!
@@ -154,7 +154,7 @@ func (s *server) GetBindingsSubscriptions(ctx context.Context, in *empty.Empty) 
 	}, nil
 }
 
-// This method gets invoked every time a new event is fired from a registerd binding. The message carries the binding name, a payload and optional metadata
+// This method gets invoked every time a new event is fired from a registered binding. The message carries the binding name, a payload and optional metadata
 func (s *server) OnBindingEvent(ctx context.Context, in *pb.BindingEventEnvelope) (*pb.BindingResponseEnvelope, error) {
 	fmt.Println("Invoked from binding")
 	return &pb.BindingResponseEnvelope{}, nil
@@ -172,7 +172,7 @@ func (s *server) OnTopicEvent(ctx context.Context, in *pb.CloudEventEnvelope) (*
 
 ```go
 func main() {
-	// create listiner
+	// create listener
 	lis, err := net.Listen("tcp", ":4000")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)

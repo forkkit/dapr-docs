@@ -7,7 +7,7 @@ Pub/Sub message buses are extensible and can be found in the [components-contrib
 
 A pub/sub in Dapr is described using a `Component` file:
 
-```
+```yml
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
@@ -36,10 +36,13 @@ You can make changes to this file the way you see fit, whether to change connect
 Dapr uses a Kubernetes Operator to update the sidecars running in the cluster with different components.
 To setup a pub/sub in Kubernetes, use `kubectl` to apply the component file:
 
-```
+```bash
 kubectl apply -f pubsub.yaml
 ```
 
 ## Reference
 
-[Setup Redis Streams](./setup-redis-streams.md)
+[Setup Redis Streams](./setup-redis.md)
+[Setup NATS](./setup-nats.md)
+[Setup Azure Service bus](./setup-azure-servicebus.md)
+[Setup RabbitMQ](./setup-rabbitmq.md)

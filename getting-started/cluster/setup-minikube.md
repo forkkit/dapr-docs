@@ -22,10 +22,8 @@ minikube config set vm-driver [driver_name]
 2. Start the cluster
 Use 1.13.x or newer version of Kubernetes with `--kubernetes-version`
 
-> **Note:** [1.16.x Kubernetes doesn't work with helm < 2.15.0](https://github.com/helm/helm/issues/6374#issuecomment-537185486)
-
 ```bash
-minikube start --cpus=4 --memory=4096 --kubernetes-version=1.14.6 --extra-config=apiserver.authorization-mode=RBAC
+minikube start --cpus=4 --memory=4096 --kubernetes-version=1.16.2 --extra-config=apiserver.authorization-mode=RBAC
 ```
 
 3. Enable dashboard and ingress addons
@@ -38,42 +36,19 @@ minikube addons enable dashboard
 minikube addons enable ingress
 ```
 
-## (optional) Install Helm and deploy Tiller
+## (optional) Install Helm v3
 
-1. [Install Helm client](https://helm.sh/docs/using_helm/#installing-the-helm-client)
+1. [Install Helm v3 client](https://helm.sh/docs/intro/install/)
 
-2. Create the Tiller service account
-
-```bash
-kubectl create serviceaccount -n kube-system tiller
-kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-```
-
-3. Install Tiller to the minikube
-
-```bash
-helm init --service-account tiller --history-max 200
-```
-
-4. Ensure that Tiller is deployed and running
-
-```bash
-kubectl get pods -n kube-system
-```
+> **Note:** The latest Dapr helm chart no longer supports Helm v2. Please migrate from helm v2 to helm v3 by following [this guide](https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3/).
 
 ### Troubleshooting
 
-1. If Tiller is not running properly, get the logs from `tiller-deploy` deployment to understand the problem:
+1. The external IP address of load balancer is not shown from `kubectl get svc`
+
+In Minikube, EXTERNAL-IP in `kubectl get svc` shows `<pending>` state for your service. In this case, you can run `minikube service [service_name]` to open your service without external IP address.
 
 ```bash
-kubectl describe deployment tiller-deploy --namespace kube-system
-```
-
-2. The external IP address of load balancer is not shown from `kubectl get svc`
-
-In Minikube, EXTERNAL-IP in `kubectl get svc` shows `<pending>` state for your service. In this case, you can run `minikube serivce [service_name]` to open your service without external IP address.
-
-```
 $ kubectl get svc
 NAME                        TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)            AGE
 ...
